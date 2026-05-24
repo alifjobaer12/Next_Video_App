@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: "Next Video App",
+	title: "Video App",
 	description:
 		"A modern video platform built with Next.js, MongoDB, ImageKit, and NextAuth",
 };
