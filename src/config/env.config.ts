@@ -18,18 +18,18 @@ if (!process.env.NEXTAUTH_SECRET) {
 }
 
 if (!process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT) {
-	console.log("NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT is not defined in environment variables. Image upload functionality may be affected.");
-	// throw new Error("NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT is not defined in environment variables");
+	// console.log("NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT is not defined in environment variables. Image upload functionality may be affected.");
+	throw new Error("NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT is not defined in environment variables");
 }
 
 if (!process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY) {
-	console.log("NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY is not defined in environment variables. Image upload functionality may be affected.");
-	// throw new Error("NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY is not defined in environment variables");
+	// console.log("NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY is not defined in environment variables. Image upload functionality may be affected.");
+	throw new Error("NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY is not defined in environment variables");
 }
 
 if (!process.env.IMAGEKIT_PRIVATE_KEY) {
-	console.log("IMAGEKIT_PRIVATE_KEY is not defined in environment variables. Image upload functionality may be affected.");
-	// throw new Error("IMAGEKIT_PRIVATE_KEY is not defined in environment variables");
+	// console.log("IMAGEKIT_PRIVATE_KEY is not defined in environment variables. Image upload functionality may be affected.");
+	throw new Error("IMAGEKIT_PRIVATE_KEY is not defined in environment variables");
 }
 
 const envConfig = {
