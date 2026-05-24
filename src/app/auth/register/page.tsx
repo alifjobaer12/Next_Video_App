@@ -56,6 +56,7 @@ const RegisterPage = () => {
 				<h1 className="mb-6 text-3xl font-bold tracking-tight text-white">
 					Create an account
 				</h1>
+
 				<form onSubmit={handelleRegister} className="space-y-5">
 					{/* Email Input */}
 					<div className="flex flex-col gap-1.5">
@@ -105,23 +106,23 @@ const RegisterPage = () => {
 					{/* Submit Button */}
 					<button
 						type="submit"
+						disabled={submitting}
 						className="group relative mt-2 flex w-full items-center justify-center rounded-xl bg-cyan-600 px-4 py-3 text-sm font-semibold text-white transition duration-200 hover:bg-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 active:scale-[0.98]"
 					>
-						Register
-					</button>
-				</form>
-				disabled={submitting}
-				<div className="mt-6 text-center text-sm text-slate-400">
-					<p className="mt-4 text-center text-sm text-slate-400">
 						{submitting ? (
 							<Loading
-								label="Creating account..."
+								label="Registering..."
 								size="sm"
-								className="justify-start text-slate-950"
+								className="justify-start text-white"
 							/>
 						) : (
-							"Create account"
+							"Register"
 						)}
+					</button>
+				</form>
+				<div className="mt-6 text-center text-sm text-slate-400">
+					<p className="mt-4 text-center text-sm text-slate-400">
+						Already have an account?{" "}
 						<Link
 							href="/auth/login"
 							className="font-semibold text-cyan-500 hover:text-cyan-400"

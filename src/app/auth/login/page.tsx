@@ -83,6 +83,7 @@ const LoginPage = () => {
 							required
 						/>
 					</div>
+
 					{/* Password Input */}
 					<div className="flex flex-col gap-1.5">
 						<label className="text-xs font-semibold uppercase tracking-wider text-slate-400">
@@ -97,25 +98,27 @@ const LoginPage = () => {
 							required
 						/>
 					</div>
+
 					{/* Submit Button */}
 					<button
 						type="submit"
+						disabled={submitting}
 						className="group relative mt-2 flex w-full items-center justify-center rounded-xl bg-cyan-600 px-4 py-3 text-sm font-semibold text-white transition duration-200 hover:bg-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 active:scale-[0.98]"
 					>
-						Login
+						{submitting ? (
+							<Loading
+								label="Logging in..."
+								size="sm"
+								className="justify-start text-white"
+							/>
+						) : (
+							"Login"
+						)}
 					</button>
-					disabled={submitting}
+
 					<div className="mt-6 text-center text-sm text-slate-400">
 						<p className="mt-4 text-center text-sm text-slate-400">
-							{submitting ? (
-								<Loading
-									label="Logging in..."
-									size="sm"
-									className="justify-start text-slate-950"
-								/>
-							) : (
-								"Log in"
-							)}
+							Do not have an account?{" "}
 							<Link
 								href="/auth/register"
 								className="font-semibold text-cyan-500 hover:text-cyan-400"
