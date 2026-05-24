@@ -5,12 +5,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Loading from "@/components/ui/loading";
+import { useToast } from "@/components/ui/toast";
 
 const LoginPage = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [checkingSession, setCheckingSession] = useState(true);
 	const [submitting, setSubmitting] = useState(false);
+	const toast = useToast();
 
 	const router = useRouter();
 
@@ -41,11 +43,19 @@ const LoginPage = () => {
 			});
 
 			if (res?.error || !res?.ok) {
-				alert(res?.error ?? "Invalid email or password");
+				toast({
+					title: "Login failed",
+					description: res?.error ?? "Invalid email or password",
+					variant: "error",
+				});
 				return;
 			}
 
-			alert("Login successful!");
+			toast({
+				title: "Login successful",
+				description: "Welcome back! Redirecting to the home page.",
+				variant: "success",
+			});
 			router.replace("/");
 		} finally {
 			setSubmitting(false);

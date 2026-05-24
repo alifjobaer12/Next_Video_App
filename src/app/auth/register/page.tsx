@@ -5,12 +5,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Loading from "@/components/ui/loading";
+import { useToast } from "@/components/ui/toast";
 
 const RegisterPage = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
 	const [submitting, setSubmitting] = useState(false);
+	const toast = useToast();
 
 	const router = useRouter();
 
@@ -19,7 +21,11 @@ const RegisterPage = () => {
 		setSubmitting(true);
 
 		if (password !== confirmPassword) {
-			alert("Passwords do not match");
+			toast({
+				title: "Registration failed",
+				description: "Passwords do not match.",
+				variant: "error",
+			});
 			setSubmitting(false);
 			return;
 		}
@@ -33,17 +39,29 @@ const RegisterPage = () => {
 			console.log("Registration response:", res);
 
 			if (!res.data.success) {
-				alert(res.data.message || "Registration failed");
+				toast({
+					title: "Registration failed",
+					description: res.data.message || "Something went wrong.",
+					variant: "error",
+				});
 				return;
 			}
 
-			alert("Registration successful! Please log in.");
+			toast({
+				title: "Registration successful",
+				description: "Your account was created. Please log in.",
+				variant: "success",
+			});
 			router.push("/auth/login");
 			// Optionally, you can also log the user in immediately after registration
 			// by calling the login API or using NextAuth's signIn function.
 		} catch (error) {
 			console.error("Registration error:", error);
-			alert("An error occurred during registration");
+			toast({
+				title: "Registration error",
+				description: "An error occurred during registration.",
+				variant: "error",
+			});
 		} finally {
 			setSubmitting(false);
 		}
