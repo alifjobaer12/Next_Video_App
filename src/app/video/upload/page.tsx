@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Input from "@/components/ui/input";
@@ -20,8 +20,44 @@ const VideoUploadPage = () => {
 	const [isUploading, setIsUploading] = useState(false);
 	const [submitting, setSubmitting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const uploadedFileIdRef = useRef<string | null>(null);
+	const publishedRef = useRef(false);
+	const deletingRef = useRef(false);
+
+	const deleteUploadedVideo = async (
+		fileId: string,
+		options?: { keepalive?: boolean },
+	) => {
+		if (!fileId || deletingRef.current) {
+			return false;
+		}
+
+		deletingRef.current = true;
+		try {
+			const res = await fetch("/api/imagekit/delete", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ fileId }),
+				keepalive: options?.keepalive,
+			});
+
+			if (!res.ok) {
+				return false;
+			}
+
+			uploadedFileIdRef.current = null;
+			setUploadResult(null);
+			setProgress(0);
+			return true;
+		} catch {
+			return false;
+		} finally {
+			deletingRef.current = false;
+		}
+	};
 
 	const onUploadSuccess = (res: ImageKitUploadResult) => {
+		uploadedFileIdRef.current = res.fileId ?? null;
 		setUploadResult(res);
 		setError(null);
 	};
@@ -32,8 +68,13 @@ const VideoUploadPage = () => {
 
 	const onUploading = (uploading: boolean) => {
 		setIsUploading(uploading);
+		if (uploading && uploadedFileIdRef.current && !publishedRef.current) {
+			void deleteUploadedVideo(uploadedFileIdRef.current);
+		}
+
 		if (uploading) {
 			setUploadResult(null);
+			setProgress(0);
 		}
 	};
 
@@ -71,6 +112,8 @@ const VideoUploadPage = () => {
 				throw new Error(json?.message ?? "Failed to publish video");
 			}
 
+			publishedRef.current = true;
+
 			// navigate to video list
 			router.push("/video");
 		} catch (err: unknown) {
@@ -81,9 +124,23 @@ const VideoUploadPage = () => {
 		}
 	};
 
-	const handleCancel = () => {
+	const handleCancel = async () => {
+		if (uploadedFileIdRef.current && !publishedRef.current) {
+			await deleteUploadedVideo(uploadedFileIdRef.current);
+		}
+
 		router.back();
 	};
+
+	useEffect(() => {
+		return () => {
+			if (uploadedFileIdRef.current && !publishedRef.current) {
+				void deleteUploadedVideo(uploadedFileIdRef.current, {
+					keepalive: true,
+				});
+			}
+		};
+	}, []);
 
 	return (
 		<main className="min-h-screen px-4 py-8">
@@ -165,7 +222,7 @@ const VideoUploadPage = () => {
 							Cancel
 						</Button>
 						<Button
-						variant="success"
+							variant="success"
 							onClick={handlePublish}
 							disabled={
 								submitting || isUploading || !uploadResult

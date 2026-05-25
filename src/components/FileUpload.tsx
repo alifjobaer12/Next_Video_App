@@ -9,6 +9,8 @@ import { upload } from "@imagekit/next";
 import axios from "axios";
 import React, { useState } from "react";
 
+const IMAGEKIT_UPLOAD_FOLDER = "/Next_Video_App/Videos";
+
 const FileUpload = (props: IFileUpload) => {
 	const [uploading, setUploading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -47,6 +49,7 @@ const FileUpload = (props: IFileUpload) => {
 			const res = (await upload({
 				file,
 				fileName: file.name,
+				folder: IMAGEKIT_UPLOAD_FOLDER,
 				publicKey: authData.publicKey,
 				signature: authData.signature,
 				token: authData.token,
